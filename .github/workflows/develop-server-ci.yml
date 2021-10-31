@@ -6,9 +6,9 @@ name: DEVELOP_SEVER_CI
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ develop ]
+    branches: [develop]
   pull_request:
-    branches: [ develop ]
+    branches: [develop]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -27,7 +27,7 @@ jobs:
       - name: make .env file
         run: |
           touch .env
-          echo "$ENV_SERVER" >> .env
+          echo "${{ secrets.env }}" >> .env
       - name: Docker build
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
@@ -39,10 +39,11 @@ jobs:
         with:
           host: ${{ secrets.DEV_SEVER }}
           username: ubuntu
-          key: ${{ secrets.SSH_KEY }}
+          key: ${{ secrets.DEV_SSH_KEY }}
           envs: GITHUB_SHA
           script: |
-            docker pull secretjuju/minmory-backend:${GITHUB_SHA::7}
-            docker tag secretjuju/minmory-backend:${GITHUB_SHA::7} minmory-backend
-            docker stop server
-            docker run -d --rm --name server -p 80:3000
+            echo "${{ secrets.DOCKER_PASSWORD }}" | sudo docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+            sudo docker pull secretjuju/minmory-backend:${GITHUB_SHA:7}
+            sudo docker tag secretjuju/minmory-backend:${GITHUB_SHA:7} minmory-backend
+            sudo docker stop server
+            sudo docker run -d --rm --name server -p 80:3000
