@@ -39,7 +39,7 @@ jobs:
         with:
           host: ${{ secrets.DEV_SEVER }}
           username: ubuntu
-          key: ${{ secrets.PRIVATE }}
+          key: ${{ secrets.SSH_KEY }}
           envs: GITHUB_SHA
           script: |
             docker pull secretjuju/minmory-backend:${GITHUB_SHA::7}
