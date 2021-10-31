@@ -42,7 +42,8 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           envs: GITHUB_SHA
           script: |
-            docker pull secretjuju/minmory-backend:${GITHUB_SHA::7}
-            docker tag secretjuju/minmory-backend:${GITHUB_SHA::7} minmory-backend
-            docker stop server
-            docker run -d --rm --name server -p 80:3000
+            sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+            sudo docker pull secretjuju/minmory-backend:${GITHUB_SHA::7}
+            sudo docker tag secretjuju/minmory-backend:${GITHUB_SHA::7} minmory-backend
+            sudo docker stop server
+            sudo docker run -d --rm --name server -p 80:3000
