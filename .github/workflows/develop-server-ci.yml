@@ -27,7 +27,7 @@ jobs:
       - name: make .env file
         run: |
           touch .env
-          echo "${{ secret.env }}" >> .env
+          echo "${{ secrets.env }}" >> .env
       - name: Docker build
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
